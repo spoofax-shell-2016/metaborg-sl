@@ -14,5 +14,5 @@ function main() {
         result = result + g();
         i = i + 1;
     }
-    return result;
+    println(result);
 }

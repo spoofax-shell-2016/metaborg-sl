@@ -1,4 +1,18 @@
-/bin/
+
 /target/
-/.cache/
+src/main/resources/specification.aterm
+src/main/resources/parsetable.tbl
+src/main/resources/logback.xml
+src/main/java/org/metaborg/lang/sl/interpreter/generated
+src/main/java/org/metaborg/lang/sl/interpreter/generated/terms
+src/main/java/org/metaborg/lang/sl/interpreter/generated/terms/build
+src/main/java/org/metaborg/lang/sl/interpreter/generated/terms/match
+src/test/java/org/metaborg/lang/sl/interpreter/generated/test
 /SL.launch
+/TestSL.launch
+/SL (Core).launch
+/SL (Daemon).launch
+/SL-core
+/SL-server
+/SL-client
+/SL

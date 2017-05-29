@@ -1,61 +1,57 @@
 module trans/semantics/expressions
 
 imports
-  src-gen/ds-signatures/Common-sig
+  ds-signatures/Common-sig
   trans/semantics/desugared-sig
   trans/semantics/values
-  trans/semantics/natives/arithmetics
+  trans/semantics/natives/bigint-arithmetics
+  trans/semantics/library/booleans
 
 signature
   native operators
-    eqV: V * V -> Bool
-    notB: Bool -> Bool
-    andB: Bool * Bool -> Bool
-    orB: Bool * Bool -> Bool
     concatS: String * String -> String
-    isS : V -> Bool
   
   native operators
     v2s : V -> String
-    
+
 rules
 
-  VarRead(name) --> lookup(name).
+  VarRead(name) --> lookup(name)
   
-  VarWrite(name, v) --> write(name, v).
+  VarWrite(name, v) --> write(name, v)
   
-  Int(s) --> NumV(newBigInteger(s)).
+  Int(s) --> NumV(s)
   
-  Sub(NumV(i1), NumV(i2)) --> NumV(subtract[i1](i2)).
-  Mul(NumV(i1), NumV(i2)) --> NumV(multiply[i1](i2)).
-  Div(NumV(i1), NumV(i2)) --> NumV(divide[i1](i2)).
+  Add(NumV(i1), NumV(i2)) --> NumV(addN(i1, i2))
   
-  String(s) --> StringV(s).
+  Add(v1@StringV(_), v2) --> StringV(concatS(v2s(v1), v2s(v2)))
   
-  Add(v1, v2) --> vout
-  where
-    case orB(isS(v1), isS(v2)) of {
-      true =>
-        StringV(concatS(v2s(v1), v2s(v2))) => vout
-      false =>
-        v1 => NumV(i1);
-        v2 => NumV(i2);
-        NumV(add[i1](i2)) => vout
-    }.
+  Add(v1, v2@StringV(_)) --> StringV(concatS(v2s(v1), v2s(v2)))
   
-  True() --> BoolV(true).
-  False() --> BoolV(false).
+  Sub(NumV(i1), NumV(i2)) --> NumV(subN(i1, i2))
+  Mul(NumV(i1), NumV(i2)) --> NumV(mulN(i1, i2))
+  Div(NumV(i1), NumV(i2)) --> NumV(divN(i1, i2))
   
-  Eq(v1, v2) --> BoolV(eqV(v1, v2)).
+  String(s) --> StringV(s)
   
-  Neq(v1, v2) --> BoolV(notB(eqV(v1, v2))).
+  True() --> BoolV(true)
+  False() --> BoolV(false)
   
-  Lte(NumV(i1), NumV(i2)) --> BoolV(lteI(i1, i2)).
-  Lt(NumV(i1), NumV(i2)) --> BoolV(ltI(i1, i2)).
-  Gte(NumV(i1), NumV(i2)) --> BoolV(lteI(i2, i1)).
-  Gt(NumV(i1), NumV(i2)) --> BoolV(ltI(i2, i1)).
+  Eq(v1, v2) --> BoolV(eqT(v1, v2))
   
-  And(BoolV(b1), BoolV(b2)) --> BoolV(andB(b1, b2)).
-  Or(BoolV(b1), BoolV(b2)) --> BoolV(orB(b1, b2)).
-  Not(BoolV(b)) --> BoolV(notB(b)).
-
+  Neq(e1, e2) --> Not(Eq(e1, e2))
+  
+  Lte(NumV(i1), NumV(i2)) --> BoolV(lteN(i1, i2))
+  
+  Lt(NumV(i1), NumV(i2)) --> BoolV(ltN(i1, i2))
+  
+  Gte(NumV(i1), NumV(i2)) --> BoolV(lteN(i2, i1))
+  
+  Gt(NumV(i1), NumV(i2)) --> BoolV(ltN(i2, i1))
+  
+  And(BoolV(b1), BoolV(b2)) --> BoolV(andB(b1, b2))
+  Or(BoolV(b1), BoolV(b2)) --> BoolV(orB(b1, b2))
+  Not(BoolV(b)) --> BoolV(notB(b))
+  
+  
+  

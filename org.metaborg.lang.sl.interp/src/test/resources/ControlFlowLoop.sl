@@ -18,5 +18,5 @@ function main() {
     }
     i = i + 1;
   }
-  return j;
+  println(j);
 }  

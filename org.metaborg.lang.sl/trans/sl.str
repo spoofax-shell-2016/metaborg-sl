@@ -7,14 +7,11 @@ imports
 	libstratego-aterm
 	signatures/SL-sig
 	editor/SL-Outliner
-	stratego/metaborg
-	runtime/index/-
-	runtime/nabl/-
-	runtime/properties/-
-	runtime/types/-
-	runtime/task/-
-	runtime/analysis/-
+	
+	libspoofax/editor/outline
+
 	runtime/editor/-
+	runtime/analysis/-
 	desugar
 	outline
 	pp

@@ -154,5 +154,5 @@ function main() {
     counter = 42;
     counter = 42;
   }
-  return counter;
+  println(counter);
 }

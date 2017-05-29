@@ -1,6 +1,6 @@
 module trans/semantics/repl
 
-imports trans/semantics/sl
+imports trans/semantics/semantics
 
 signature
   sorts
@@ -17,37 +17,46 @@ signature
     FunDef -shell-> V
     Stmt -shell-> U
     Expr -shell-> V
+  
+  sorts
+    C
+  
+  constructors
+    C: E -> C
+  
+  components
+    C: C
 
 rules
 
-  ShellInit() -init-> ShellInit() :: E { }, C C({ }).
+  ShellInit() -init-> ShellInit() :: E { }, C C({ })
 
   ProgramDesug(fdefs, e) :: E, C -shell-> v :: E', C'
   where
     fdefs :: E, C -load-> _ :: E1, C1;
-    e :: E1, C1 --> v :: E', C'.
+    e :: E1, C1 --> v :: E', C'
 
   StmtBlock(Block(ss)) :: E, C -shell-> u :: E', C'
   where
-    ss :: E, C --> u :: E', C'.
+    ss :: E, C --> u :: E', C'
 
   FunDef(name, params, body) :: E, C C(EC) -shell-> clos :: E', C'
   where
     ClosV(name, params, __Block2Stmt__(body), E) => clos;
 	{ name |--> clos } => entry;
 	{ entry, E } => E';
-	C({ entry, EC }) => C'.
+	C({ entry, EC }) => C'
 
   s : Stmt :: E, C -shell-> u :: E', C'
   where
-    s :: E, C --> u :: E', C'.
+    s :: E, C --> u :: E', C'
 
   e : Expr :: E, C -shell-> v :: E', C'
   where
-    e :: E, C --> v :: E', C'.
+    e :: E, C --> v :: E', C'
 
   FunCall(name, args) --> v
   where
     lookup(name) --> ClosV(_, params, body, E);
     args --> vargs;
-    invoke(vargs, params, body) :: C C(E) --> v.
+    invoke(vargs, params, body) :: C C(E) --> v

@@ -1,7 +1,7 @@
 module trans/semantics/desugared-sig
 
 imports
-  src-gen/ds-signatures/SL-sig
+  ds-signatures/SL-sig
 
 signature
 

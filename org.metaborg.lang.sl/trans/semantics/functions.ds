@@ -22,20 +22,13 @@ rules
         f -load-> _;
         fs' -load-> _
       [] =>
-    }.
+    }
     
-//  [] : List(FunDef) -load-> U().
-//  
-//  [f | fs] : List(FunDef) -load-> U()
-//  where
-//    f -load-> _;
-//    fs -load-> _.
-
-  FunDef(name, params, body) :: C C(E), E E' -load-> U() :: C C({entry, E}), E {entry, E'}
+  FunDef(name, params, body) :: GE, E -load-> U() :: GE {entry, GE}, E {entry, E}
   where
-    {name |--> FunV(name, params, __Block2Stmt__(body))} => entry.
+    {name |--> FunV(name, params, body)} => entry
 
-  FunDef(name, params, body) -fun2val-> FunV(name, params, __Block2Stmt__(body)).
+  FunDef(name, params, body) -fun2val-> FunV(name, params, __Block2Stmt__(body))
 
 rules
 
@@ -43,15 +36,15 @@ rules
   where
     lookup(name) --> FunV(_, params, body);
     args --> vargs;
-    invoke(vargs, params, body) --> v.
+    invoke(vargs, params, body) --> v
 
 /*
 * Function calls
 */
 signature
-  constructors
-    invoke: List(V) * List(String) * Stmt --> V
-    bind: List(V) * List(String) --> E
+  arrows
+    invoke(List(V), List(String), Stmt) --> V
+    bind(List(V), List(String)) --> E
   
   sorts
     ReturnHandler
@@ -61,20 +54,20 @@ signature
     onReturn : Stmt -> ReturnHandler // will catch a ReturnException with the value and the semantic components
   
   arrows
-    ReturnHandler --> V // natively implemented
+    ReturnHandler :: E, GE --> V :: E, GE // natively implemented
   
   arrows
     List(Expr) --> List(V)
 
-  constructors
-    bind_aux : List(V) * List(String) * E --> E
+  arrows
+    bind_aux(List(V), List(String), E) --> E
     
 rules  
 
   invoke(vseq, parseq, stmt) :: E --> v :: E
   where
     bind(vseq, parseq) :: E --> E' :: E _;
-    onReturn(stmt) :: E' --> v :: E _.
+    onReturn(stmt) :: E' --> v :: E _
   
   es : List(Expr) --> vs
   where
@@ -85,15 +78,7 @@ rules
         [v | vs'] => vs
       [] =>
         [] => vs
-    }.
-  
-//  [] : List(Expr) --> [].
-//  
-//  [e | es] : List(Expr) --> [v | vs]
-//  where
-//    e --> v;
-//    es --> vs.
-  
+    }
   
   bind_aux(vs, params, Ecall) --> Ecall'
   where
@@ -103,42 +88,20 @@ rules
         bind_aux(vs', ps', {p |--> v, Ecall}) --> Ecall'
     otherwise =>
       Ecall => Ecall'
-    }. 
+    }
     
-  bind(vs, params) :: C c@C(Etop), E --> Ecall :: C c, E
+  bind(vs, params) :: GE, E --> Ecall :: GE, E
   where
-    bind_aux(vs, params, Etop) --> Ecall.
+    bind_aux(vs, params, GE) --> Ecall
     
-  
-//  bind(vs, params) :: E, C --> Ecall :: E', C'
-//  where
-//    vs => []
-//    < {
-//      params => [];
-//      C => C(Etop);
-//      Etop => Ecall;
-//      E => E';
-//      C => C'
-//    } + {
-//      vs => [v | vs'];
-//      params => [p | ps];
-//      bind(vs', ps) :: E, C --> Ebind :: E', C';
-//      {p |--> v, Ebind} => Ecall
-//    }.
-  
-//  bind([], []) :: C c@C(E) --> E :: C c. 
-//  
-//  bind([v | vs], [p | ps]) --> {p |--> v, E}
-//  where
-//    bind(vs, ps) --> E.
   
   ReturnVoid() --> U()
   where
-    doReturn(NullV()) --> _.
+    doReturn(NullV()) --> _
 
   Return(v) --> U()
   where
-    doReturn(v) --> _.
+    doReturn(v) --> _
 
 
 

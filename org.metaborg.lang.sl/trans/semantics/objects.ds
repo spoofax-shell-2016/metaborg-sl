@@ -20,14 +20,14 @@ signature
 
 rules
 
-  SLNewObject() --> ObjV(newObj()).
+  SLNewObject() --> ObjV(newObj())
   
-  PropRead(ObjV(od), prop) --> readProp[od](prop).
-  PropWrite(ObjV(od), prop, v) --> writeProp[od](prop, v).
+  PropRead(ObjV(od), prop) --> readProp[od](prop)
+  PropWrite(ObjV(od), prop, v) --> writeProp[od](prop, v)
 
   MethodCall(ObjV(od), fun, args) --> v
   where
     readProp[od](fun) => FunV(_, params, body);
     args --> vs;
-    invoke(vs, params, body) --> v.
+    invoke(vs, params, body) --> v
 

@@ -1,0 +1,10 @@
+module trans/semantics/library/native-booleans
+
+signature
+  native operators
+    eqT: AST * AST -> Bool
+    notB: Bool -> Bool
+    andB: Bool * Bool -> Bool
+    orB: Bool * Bool -> Bool
+
+
