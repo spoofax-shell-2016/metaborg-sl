@@ -12,9 +12,9 @@ import com.oracle.truffle.api.source.SourceSection;
 
 @NodeChildren({ @NodeChild(value = "left", type = TermBuild.class),
 		@NodeChild(value = "right", type = TermBuild.class) })
-public abstract class lteI_2 extends TermBuild {
+public abstract class lteBigInt_2 extends TermBuild {
 
-	public lteI_2(SourceSection source) {
+	public lteBigInt_2(SourceSection source) {
 		super(source);
 	}
 
@@ -26,7 +26,7 @@ public abstract class lteI_2 extends TermBuild {
 
 	public static TermBuild create(SourceSection source, TermBuild left,
 			TermBuild right) {
-		return lteI_2NodeGen.create(source, left, right);
+		return lteBigInt_2NodeGen.create(source, left, right);
 	}
 
 }

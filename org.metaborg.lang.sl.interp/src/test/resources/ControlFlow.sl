@@ -5,6 +5,6 @@ function main() {
   foo();
   if (1 < 2) {
     bar();
-    return 1;
+    println(1);
   }
 }  

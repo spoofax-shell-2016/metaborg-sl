@@ -3,7 +3,7 @@ function main() {
   while(i <= 5) {
     i = foo(i);
   }
-  return i;
+  println(i);
 }
 
 function foo(i) {

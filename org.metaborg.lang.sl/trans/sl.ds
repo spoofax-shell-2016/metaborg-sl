@@ -1,0 +1,16 @@
+module trans/sl
+
+imports
+  trans/semantics/semantics
+
+signature
+  arrows
+    Program -init-> V
+    
+
+rules // loading and init
+
+  ProgramDesug(fdefs, e) -init-> v
+  where
+    fdefs :: E {}, GE {} -load-> _ :: E, GE;
+    e :: E, GE --> v :: E _, GE _

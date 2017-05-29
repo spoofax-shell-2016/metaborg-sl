@@ -6,5 +6,5 @@ function main() {
     }  
     i = i + 1;  
   }
-  return i;  
+  println(i);  
 }  

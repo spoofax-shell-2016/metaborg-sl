@@ -3,5 +3,5 @@ function main() {
   while (i < 1000) {  
     i = i + 1;  
   }  
-  return i;  
+  println(i);  
 }  

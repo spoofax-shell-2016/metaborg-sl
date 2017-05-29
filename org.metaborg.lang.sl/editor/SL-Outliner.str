@@ -3,8 +3,6 @@ module editor/SL-Outliner
 imports
   
   signatures/SL-sig
-  runtime/editor/outline-library
-  runtime/editor/origins
 
 rules
   

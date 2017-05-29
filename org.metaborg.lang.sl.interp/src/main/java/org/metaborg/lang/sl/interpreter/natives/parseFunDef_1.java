@@ -21,8 +21,9 @@ public abstract class parseFunDef_1 extends TermBuild {
 
 	@Specialization
 	public IFunDefTerm doEvaluated(String s) {
-		IStrategoTerm funDefTerm = getContext().getParser().parse(
-				Source.fromBytes(s.getBytes(), "Dynamically defined function",
+		IStrategoTerm funDefTerm = getContext().getParser()
+				.parse(Source.fromBytes(s.getBytes(),
+						"Dynamically defined function",
 						Charset.defaultCharset()), "FunDef");
 
 		IStrategoTerm desugFunDefTerm = new DesugarTransformer()

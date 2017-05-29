@@ -2,10 +2,12 @@ package org.metaborg.lang.sl.interpreter.natives;
 
 import java.util.Arrays;
 
+import org.metaborg.lang.sl.interpreter.generated.TypesGen;
+import org.metaborg.lang.sl.interpreter.generated.terms.IVTerm;
+import org.metaborg.lang.sl.interpreter.generated.terms.doReturn_1_Term;
 import org.metaborg.meta.lang.dynsem.interpreter.nodes.rules.Rule;
-import org.metaborg.meta.lang.dynsem.interpreter.nodes.rules.RuleRegistry;
+import org.metaborg.meta.lang.dynsem.interpreter.nodes.rules.RuleKind;
 import org.metaborg.meta.lang.dynsem.interpreter.nodes.rules.RuleResult;
-import org.metaborg.meta.lang.dynsem.interpreter.terms.BuiltinTypesGen;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -15,8 +17,8 @@ public class rule_doReturn_1 extends Rule {
 
 	public rule_doReturn_1() {
 		super(SourceSection.createUnavailable("Rule", "doReturn"),
-				new FrameDescriptor(), RuleRegistry.makeKey("default",
-						"doReturn", 1));
+				new FrameDescriptor(), RuleKind.TERM, DEFAULT_NAME,
+				doReturn_1_Term.class);
 	}
 
 	@Override
@@ -27,11 +29,10 @@ public class rule_doReturn_1 extends Rule {
 
 		// we need expectation nodes for a node that we do not yet know
 
-		Object resultValue = BuiltinTypesGen.asITerm(arguments[0])
-				.allSubterms()[0];
+		IVTerm resValue = TypesGen.asdoReturn_1_Term(arguments[0]).get_1();
 
-		RuleResult rr = new RuleResult(resultValue, Arrays.copyOfRange(
-				arguments, 1, arguments.length));
+		RuleResult rr = new RuleResult(resValue,
+				Arrays.copyOfRange(arguments, 1, arguments.length));
 
 		throw new ReturnException(rr);
 	}

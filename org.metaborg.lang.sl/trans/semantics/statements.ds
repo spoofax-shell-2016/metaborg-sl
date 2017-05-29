@@ -1,4 +1,4 @@
-module trans/semantics/control-flow
+module trans/semantics/statements
 
 imports
   trans/semantics/desugared-sig
@@ -8,19 +8,18 @@ rules
   
   While(e, b) --> U()
    where
-     onBreak(onContinue(loop2stmt(loopSpec(expandBoolV(e), __Block2Stmt__(b))))) --> _.
+     onBreak(onContinue(loop2stmt(loopSpec(expandBoolV(e), b)))) --> _
 
 signature
   sorts
     Loop
-  
+
   constructors
-    loop: BoolVExpand * Stmt -> Loop
     loopSpec: BoolVExpand * Stmt -> Loop
     loop2stmt : Loop -> Stmt
-  
+
   arrows
-    Loop --> U // natively implemented
+    Loop :: E, GE --> U :: E, GE // natively implemented
   
   sorts
     BoolVExpand
@@ -33,23 +32,11 @@ signature
 
 rules
 
-  loop2stmt(l) --> l.
+  loop2stmt(l) --> l
 
   expandBoolV(e) --> bv
   where
-    e --> BoolV(bv).
-  
-//  l@loopSpec(boolexp, stmt) :: C, E --> U() :: C''', E'''
-//  where
-//    boolexp :: C, E --> bv :: C', E';
-//    case bv of {
-//      true =>
-//        stmt :: C', E' --> _ :: C'', E'';
-//        l :: C'', E'' --> _ :: C''', E'''
-//      otherwise =>
-//        C' => C''';
-//        E' => E'''
-//    }.
+    e --> BoolV(bv)
   
   l@loopSpec(boolexp, stmt) --> U()
   where
@@ -59,7 +46,7 @@ rules
         stmt --> _;
         l --> _
       otherwise =>
-    }.
+    }
 
 signature
   sorts
@@ -73,84 +60,49 @@ signature
     onContinue : Stmt -> Stmt // will handle a ContinueException with the value and the semantic components  
 
    arrows
-     BreakHandler --> U // natively implemented
-     ContinueHandler --> U // natively implemented
+     BreakHandler :: E, GE --> U :: E, GE // natively implemented
+     ContinueHandler :: E, GE --> U :: E, GE // natively implemented
 
 rules
   
-  Continue() --> u
-  where
-    doContinue() --> u.
-  
-  Break() --> u
-  where
-    doBreak() --> u.
+  Continue() --> doContinue()
+
+  Break() --> doBreak()
 
 rules
   
-//  IfThenElse(e, Block(s1), Block(s2)) :: C, E --> U() :: C'', E''
-//  where
-//    e :: C, E --> bv :: C', E';
-//    case bv of {
-//      BoolV(true) =>
-//        s1 :: C', E' --> _ :: C'', E''
-//      BoolV(false) =>
-//        s2 :: C', E' --> _ :: C'', E''
-//    }.
-
   IfThenElse(e, Block(s1), Block(s2)) --> U()
   where
-    e --> bv;
+    e --> BoolV(bv);
     case bv of {
-      BoolV(true) =>
+      true =>
         s1 --> _
-      BoolV(false) =>
+      false =>
         s2 --> _
-    }.
+    }
 
-  Stmt(e) --> U()
-  where
-    e --> _.
+  Stmt(_ : V) --> U()
   
-  __Block2Stmt__(Block(ss)) --> U()
-  where
-    ss --> _.
+  __Block2Stmt__(Block(ss)) --> ss
   
 signature
   arrows
     List(Stmt) --> U
-  constructors
-    stmts_aux : List(Stmt) * U --> U
+  arrows
+    stmts_aux(List(Stmt), U) --> U
 
 rules
 
-  stmts_aux(stmts, u) --> U()
+  stmts_aux(stmts, u) --> u
   where
     case stmts of {
       [s | stmts'] =>
         s --> _;
         stmts_aux(stmts', u) --> _
       otherwise =>
-    }.
+    }
 
   stmts : List(Stmt) --> u
   where
-    stmts_aux(stmts, U()) --> u.
+    stmts_aux(stmts, U()) --> u
 
-//  stmts : List(Stmt) :: C, E --> U() :: C'', E''
-//  where
-//    stmts => [s | xs]
-//    < {
-//      s :: C, E --> _ :: C', E';
-//      xs :: C', E' --> _ :: C'', E''
-//    } + {
-//      C => C'';
-//      E => E''
-//    }.
-
-//  [] : List(Stmt) --> U().
-//  
-//  [s | xs] : List(Stmt) --> U()
-//  where
-//    s --> _;
-//    xs --> _.

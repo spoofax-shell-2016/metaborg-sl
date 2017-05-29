@@ -2,49 +2,44 @@ module trans/semantics/values
 
 imports
   trans/semantics/desugared-sig
-  trans/semantics/natives/arithmetics
 
 signature
+  sorts
+    Number
   sorts U V
 
   constructors
     U: U
     NullV: V
     BoolV : Bool -> V
-    NumV : BigInteger -> V
+    NumV : Number -> V
     StringV : String -> V
     FunV: String * List(String) * Stmt -> V
     
   arrows
-    Int |- Expr --> V
+    Expr --> V
     Stmt --> U
  
   sort aliases
     E = Map(String, V)
   
-  sorts
-    C
-  
-  constructors
-    C : E -> C
-  
-  variables
+  components
     E : E
-    C : C
-
+    GE : E
+  
   variables
     v : V
     u : U
 
 signature
-  constructors
-    lookup : String --> V
-    write : String * V --> V
+  arrows
+    lookup(String) --> V
+    write(String, V) --> V
 
 rules
 
-  lookup(name) :: E --> E[name] :: E.
+  lookup(name) :: E --> E[name] :: E
 
-  write(name, v) :: E --> v :: E {name |--> v, E}.
+  write(name, v) :: E --> v :: E {name |--> v, E}
 
   

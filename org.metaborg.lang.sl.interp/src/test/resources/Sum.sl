@@ -5,5 +5,5 @@ function main() {
     sum = sum + i;  
     i = i + 1;  
   }  
-  return sum;  
+  println(sum);
 }  

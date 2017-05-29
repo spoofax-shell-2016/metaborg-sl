@@ -1,8 +1,9 @@
 package org.metaborg.lang.sl.interpreter.natives;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.metaborg.meta.lang.dynsem.interpreter.nodes.building.TermBuild;
 
@@ -22,9 +23,19 @@ public class readln_0 extends TermBuild {
 
 	@Override
 	public String executeString(VirtualFrame frame) {
+		InputStream is = getContext().getInput();
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		int c;
 		try {
-			return new BufferedReader(new InputStreamReader(getContext()
-					.getInput())).readLine();
+			for (c = is.read(); c != '\n' && c != -1; c = is.read()) {
+				byteArrayOutputStream.write(c);
+			}
+			if (c == -1 && byteArrayOutputStream.size() == 0) {
+				return null;
+			}
+			String line = byteArrayOutputStream
+					.toString(StandardCharsets.US_ASCII.displayName());
+			return line;
 		} catch (IOException e) {
 			throw new IllegalStateException("Failed to read input stream", e);
 		}

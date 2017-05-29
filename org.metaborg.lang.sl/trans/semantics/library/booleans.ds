@@ -1,0 +1,37 @@
+module trans/semantics/library/booleans
+
+signature
+  arrows
+    eqT(AST, AST) --> Bool
+    notB(Bool) --> Bool
+    andB(Bool, Bool) --> Bool
+    orB(Bool, Bool) --> Bool
+
+rules
+  
+  eqT(t1, t2) --> true
+  where
+    t1 == t2
+  
+  eqT(t1, t2) --> false
+  where
+    t1 != t2
+
+  andB(b1, b2) --> b3
+  where
+    case b1 of {
+      false => false => b3
+      otherwise =>
+        b2 => b3
+    }
+
+  orB(b1, b2) --> b3
+  where
+    case b1 of {
+      true => true => b3
+      otherwise => b2 => b3
+    }
+  
+  notB(true) --> false
+  
+  notB(false) --> true

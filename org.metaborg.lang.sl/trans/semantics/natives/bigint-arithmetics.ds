@@ -1,0 +1,42 @@
+module trans/semantics/natives/bigint-arithmetics
+
+signature
+  sort aliases
+    Number = BigInteger
+
+  native datatypes
+    "java.math.BigInteger" as BigInteger {
+      add : BigInteger -> BigInteger
+      subtract : BigInteger -> BigInteger
+      multiply : BigInteger -> BigInteger
+      divide : BigInteger -> BigInteger
+    }
+  
+  native operators
+    newBigInteger : String -> BigInteger
+    lteBigInt : BigInteger * BigInteger -> Bool
+    ltBigInt : BigInteger * BigInteger -> Bool
+
+  arrows
+    String --> Number
+    addN(Number, Number) --> Number
+    subN(Number, Number) --> Number
+    mulN(Number, Number) --> Number
+    divN(Number, Number) --> Number
+    ltN(Number, Number)  --> Bool
+    lteN(Number, Number) --> Bool
+
+rules
+
+  x : String --> newBigInteger(x)
+  
+  addN(i1, i2) --> add[i1](i2)
+  subN(i1, i2) --> subtract[i1](i2)
+  mulN(i1, i2) --> multiply[i1](i2)
+  divN(i1, i2) --> divide[i1](i2)
+  
+  ltN(i1, i2) --> ltBigInt(i1, i2)
+  
+  lteN(i1, i2) --> lteBigInt(i1, i2)
+  
+    

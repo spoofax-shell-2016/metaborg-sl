@@ -1,5 +1,5 @@
 function main() {
-  return loop1(1, 200);
+  println(loop1(1, 200));
 }
 
 function loop1(i, j) {

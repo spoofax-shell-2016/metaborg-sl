@@ -1,0 +1,5 @@
+org.metaborg.lang.sl.interp/pom.xml
+org.metaborg.lang.sl.interp/.settings/org.eclipse.jdt.apt.core.prefs
+org.metaborg.lang.sl.interp/.settings/org.eclipse.jdt.core.prefs
+org.metaborg.lang.sl.interp/.settings/org.eclipse.m2e.core.prefs
+org.metaborg.lang.sl.interp/.settings/org.jboss.tools.maven.apt.prefs

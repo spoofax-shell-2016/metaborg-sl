@@ -34,8 +34,8 @@ public class ObjData {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		for (Entry<String, IVTerm> entry : store.entrySet()) {
-			builder.append(entry.getKey() + " : " + v2s_1(entry.getValue())
-					+ "\n");
+			builder.append(
+					entry.getKey() + " : " + v2s_1(entry.getValue()) + "\n");
 		}
 		builder.append("}");
 		return builder.toString();
